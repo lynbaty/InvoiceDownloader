@@ -1,0 +1,13 @@
+C:\A Tin\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\InvoiceDownloader.exe
+C:\A Tin\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\InvoiceDownloader.dll
+C:\A Tin\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\InvoiceDownloader.deps.json
+C:\A Tin\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\InvoiceDownloader.runtimeconfig.json
+C:\A Tin\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\InvoiceDownloader.pdb
+C:\A Tin\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\ClosedXML.dll
+C:\A Tin\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\DocumentFormat.OpenXml.dll
+C:\A Tin\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\ExcelNumberFormat.dll
+C:\A Tin\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\Irony.dll
+C:\A Tin\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\Microsoft.Office.Interop.Excel.dll
+C:\A Tin\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\Newtonsoft.Json.dll
+C:\A Tin\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\SixLabors.Fonts.dll
+C:\A Tin\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\XLParser.dll

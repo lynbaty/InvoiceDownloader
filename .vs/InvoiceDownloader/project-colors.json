@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "3cd9be7d-06e4-4b12-8002-26eee3ff6181": {
+      "ProjectGuid": "3cd9be7d-06e4-4b12-8002-26eee3ff6181",
+      "DisplayName": "InvoiceDownloader",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
