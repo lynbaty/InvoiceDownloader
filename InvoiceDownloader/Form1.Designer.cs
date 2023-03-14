@@ -41,6 +41,8 @@
             this.endTime = new System.Windows.Forms.DateTimePicker();
             this.errorText1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.txtFilePath = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // txtSecretKey
@@ -179,11 +181,33 @@
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(533, 57);
+            this.button5.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(80, 24);
+            this.button5.TabIndex = 16;
+            this.button5.Text = "Browse...";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // txtFilePath
+            // 
+            this.txtFilePath.Location = new System.Drawing.Point(33, 58);
+            this.txtFilePath.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.txtFilePath.Name = "txtFilePath";
+            this.txtFilePath.Size = new System.Drawing.Size(480, 23);
+            this.txtFilePath.TabIndex = 15;
+            this.txtFilePath.Text = "C:\\Users\\boank\\Downloads\\SOURCEID_04541 - Cole Johnson.xml";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(738, 450);
+            this.Controls.Add(this.button5);
+            this.Controls.Add(this.txtFilePath);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.errorText1);
             this.Controls.Add(this.endTime);
@@ -220,5 +244,7 @@
         private DateTimePicker endTime;
         private TextBox errorText1;
         private Button button1;
+        private Button button5;
+        private TextBox txtFilePath;
     }
 }

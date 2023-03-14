@@ -13,6 +13,8 @@ namespace InvoiceDownloader.Model
         public decimal? Discount { get; set; }
         public string? Code { get; set; }
         public string? CustomerName { get; set; }
+        public string? CustomerId { get; set; }
+
         public string? BranchName { get; set; }
         public DateTime? CreatedDate { get; set; }
         public List<InvoiceDetail> InvoiceDetails { set; get; } = new();

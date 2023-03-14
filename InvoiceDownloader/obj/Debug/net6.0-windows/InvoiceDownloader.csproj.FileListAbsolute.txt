@@ -69,3 +69,30 @@ C:\A Tin\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDow
 C:\A Tin\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\ref\InvoiceDownloader.dll
 C:\A Tin\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.pdb
 C:\A Tin\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.genruntimeconfig.cache
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\InvoiceDownloader.exe
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\InvoiceDownloader.deps.json
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\InvoiceDownloader.runtimeconfig.json
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\InvoiceDownloader.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\ref\InvoiceDownloader.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\InvoiceDownloader.pdb
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\ClosedXML.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\CsvHelper.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\DocumentFormat.OpenXml.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\ExcelNumberFormat.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\Irony.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\Microsoft.Office.Interop.Excel.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\Newtonsoft.Json.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\SixLabors.Fonts.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\XLParser.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.csproj.AssemblyReference.cache
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.Form1.resources
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.csproj.GenerateResource.cache
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.GeneratedMSBuildEditorConfig.editorconfig
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.AssemblyInfoInputs.cache
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.AssemblyInfo.cs
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.csproj.CoreCompileInputs.cache
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.csproj.CopyComplete
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\ref\InvoiceDownloader.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.pdb
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.genruntimeconfig.cache

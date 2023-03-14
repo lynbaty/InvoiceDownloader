@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "4oRNF2sP2QZkrXxu2nOGlwoZTkv1tawwMLfOR99xgNVsxTZKoA2oL87+bS3VZHoCKlp73KuNu0rqmv2xhd4JKg==",
+  "dgSpecHash": "rnS66xYQlnzcLTV5hOXSJH4bmtrEZJf/w+rwO8iav8LHVKvzkAWLwUQ2Mh/xOpxw3q7uQLtm7xLH6Akn1HBQpA==",
   "success": true,
   "projectFilePath": "D:\\.Net\\Invoice\\InvoiceDownloader\\InvoiceDownloader\\InvoiceDownloader.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\boank\\.nuget\\packages\\closedxml\\0.97.0\\closedxml.0.97.0.nupkg.sha512",
+    "C:\\Users\\boank\\.nuget\\packages\\csvhelper\\30.0.1\\csvhelper.30.0.1.nupkg.sha512",
     "C:\\Users\\boank\\.nuget\\packages\\documentformat.openxml\\2.16.0\\documentformat.openxml.2.16.0.nupkg.sha512",
     "C:\\Users\\boank\\.nuget\\packages\\excelnumberformat\\1.1.0\\excelnumberformat.1.1.0.nupkg.sha512",
     "C:\\Users\\boank\\.nuget\\packages\\irony.netcore\\1.0.11\\irony.netcore.1.0.11.nupkg.sha512",

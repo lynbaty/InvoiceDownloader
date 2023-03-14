@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using InvoiceDownloader.Model;
 using System.Data;
+using System.Text;
 
 namespace InvoiceDownloader
 {
@@ -8,7 +9,11 @@ namespace InvoiceDownloader
     {
         public List<int> _branchKeys { get; set; } = new();
         public List<Product> _products { get; set; } = new();
+        public List<CustomerDetail> _customers { get; set; } = new();
+
         public List<string> _helperProducts { get; set; } = new();
+        public List<CommissionDTO> _commissions { get; set; } = new();
+
 
         private readonly ClientService _clientService;
         public Form1()
@@ -17,11 +22,24 @@ namespace InvoiceDownloader
             InitializeComponent();
             startTime.Value = DateTime.Now;
             endTime.Value = DateTime.Now;
+           
         }
+
+        public async Task ReadCommission()
+        {   
+            using StreamReader reader = File.OpenText(txtFilePath.Text);
+            
+                var content = await reader.ReadToEndAsync();
+                using var myStream = new MemoryStream(Encoding.UTF8.GetBytes(content));
+                _commissions = await CSVConfig.CsvToList<CommissionDTO>(myStream);
+          
+        }
+
 
         #region CheckClick
         public async void check_Click(object sender, EventArgs e)
         {
+            
             var token = await _clientService.GetClient(txtSecretKey.Text);
             if (token != null)
             {
@@ -29,6 +47,9 @@ namespace InvoiceDownloader
                 errorText1.Text = "Loading branches...";
                 var branches = await _clientService.prepareValue(token);
                 _products = await _clientService.GetProductTree();
+                var customerGroup = await _clientService.GetCustomer();
+                customerGroup.ForEach(g => g.customerGroupDetails.ForEach(cd => cd.GroupName = g.Name));
+                _customers = customerGroup.SelectMany(g => g.customerGroupDetails).ToList();
                 _helperProducts = (await _clientService.GetHelperProducts()).Select(p => p.Code).ToList()!;
                 branches.ForEach(b => listView1.Items.Add(new ListViewItem(b.BranchName, b.Id)));
                 errorText1.Text = "Loaded branches successfully";
@@ -553,5 +574,31 @@ namespace InvoiceDownloader
             }
         }
         #endregion
+
+        private async void button5_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog
+            {
+                InitialDirectory = @"D:\",
+                Title = "Browse Text Files",
+
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                DefaultExt = "csv",
+               
+                FilterIndex = 2,
+                RestoreDirectory = true,
+
+                ReadOnlyChecked = true,
+                ShowReadOnly = true
+            };
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                txtFilePath.Text = openFileDialog1.FileName;
+            }
+            await ReadCommission();
+        }
     }
 }

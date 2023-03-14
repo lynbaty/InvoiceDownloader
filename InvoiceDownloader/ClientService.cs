@@ -142,5 +142,21 @@ namespace InvoiceDownloader
 
             return invoiceResponse?.Data!;
         }
+
+        public async Task<List<CustomerGroup>> GetCustomer()
+        {
+
+
+            var endpoint = $"https://public.kiotapi.com/customers/group?pageSize=50";
+
+            var req = new HttpRequestMessage(HttpMethod.Get, endpoint);
+            var res = await _mainClient!.SendAsync(req);
+
+            var bodyContent = await res.Content.ReadAsStringAsync();
+            var customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(bodyContent);
+
+            
+             return customerResponse.data;
+        }
     }
 }
