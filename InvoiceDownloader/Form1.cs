@@ -47,7 +47,7 @@ namespace InvoiceDownloader
                 errorText1.Text = "Loading branches...";
                 var branches = await _clientService.prepareValue(token);
                 _products = await _clientService.GetProductTree();
-                var customerGroup = await _clientService.GetCustomer();
+                var customerGroup = (await _clientService.GetCustomer()).Where(c => c.Id == 3242 || c.Id == 3280).ToList();
                 customerGroup.ForEach(g => g.customerGroupDetails.ForEach(cd => cd.GroupName = g.Name));
                 _customers = customerGroup.SelectMany(g => g.customerGroupDetails).ToList();
                 _helperProducts = (await _clientService.GetHelperProducts()).Select(p => p.Code).ToList()!;
@@ -97,6 +97,24 @@ namespace InvoiceDownloader
 
                 var invoicePrintModels = GetPrintModels(invoices);
                 invoicePrintModels = UpdateDiscountDetails(invoicePrintModels);
+                invoicePrintModels.ForEach(i => i.CustomerGroup = _customers.FirstOrDefault(c => c.CustomerId.ToString().Equals(i.CustomerId))?.GroupName ?? "Bán Lẻ");
+                if (_commissions.Count > 0)
+                    invoicePrintModels.ForEach(i =>
+                    {
+                        var cms = _commissions.FirstOrDefault(c => c.ProductCode == i.ProductCode);
+                        if(cms != null)
+                        {
+                            i.BanSiTVBH = cms.BanSiTVBH;
+                            i.BanLeTVBH = cms.BanLeTVBH;
+                            i.CSKHXemay = cms.CSKHXemay;
+                            i.CSKHXetai = cms.CSKHXetai;
+                            i.KhachSiXeNgoai = cms.KhachSiXeNgoai;
+                            i.KhachLeXeNgoai = cms.KhachLeXeNgoai;
+                            i.DuanTVBH = cms.DuanTVBH;
+                            i.GiaoNemDuAn = cms.GiaoNemDuAn;
+                        }    
+                    });
+
                 if (invoicePrintModels != null && invoicePrintModels.Any())
                     ExportExcel(invoicePrintModels);
                 errorText1.Text = $"Notice: Export invoices successfully!";
@@ -120,6 +138,7 @@ namespace InvoiceDownloader
                     var invoiceModel = new InvoicePrintModel
                     {
                         InvoiceCode = invoice.Code,
+                        CustomerId = invoice.CustomerId,
                         CustomerCode = invoice.CustomerCode,
                         CustomerName = invoice.CustomerName,
                         TotalQuantity = detail.Quantity,
@@ -152,6 +171,7 @@ namespace InvoiceDownloader
                                 {
                                     InvoiceCode = invoice.Code,
                                     CustomerCode = invoice.CustomerCode,
+                                    CustomerId = invoice.CustomerId,
                                     CustomerName = invoice.CustomerName,
                                     BasePrice = product.Product?.BasePrice ?? 0,
                                     TotalQuantity = detail.Quantity * product.Quantity,
@@ -179,6 +199,7 @@ namespace InvoiceDownloader
                             InvoiceCode = invoice.Code,
                             CustomerCode = invoice.CustomerCode,
                             CustomerName = invoice.CustomerName,
+                            CustomerId= invoice.CustomerId,
                             ProductName = sur.SurchargeName,
                             Unit = "TK",
                             Surcharge = sur.SurValue,
@@ -284,8 +305,7 @@ namespace InvoiceDownloader
                 if (i > 0)
                     itemPrev = invoices[i - 1];
 
-                table.Columns[10].DataType = typeof(int);
-                table.Columns[11].DataType = typeof(decimal);
+                table.Columns[11].DataType = typeof(int);
                 table.Columns[12].DataType = typeof(decimal);
                 table.Columns[13].DataType = typeof(decimal);
                 table.Columns[14].DataType = typeof(decimal);
@@ -294,6 +314,15 @@ namespace InvoiceDownloader
                 table.Columns[17].DataType = typeof(decimal);
                 table.Columns[18].DataType = typeof(decimal);
                 table.Columns[19].DataType = typeof(decimal);
+                table.Columns[20].DataType = typeof(decimal);
+                table.Columns[21].DataType = typeof(decimal);
+                table.Columns[22].DataType = typeof(decimal);
+                table.Columns[23].DataType = typeof(decimal);
+                table.Columns[24].DataType = typeof(decimal);
+                table.Columns[25].DataType = typeof(decimal);
+                table.Columns[26].DataType = typeof(decimal);
+                table.Columns[27].DataType = typeof(decimal);
+                table.Columns[28].DataType = typeof(decimal);
                 var discountDetail = item.Unit == "TP" ? item.DiscountDetails * item.ComboDiscountRaito : item.DiscountDetails;
                 var comboDiscount = item.Unit == "TP" ? item.ComboDiscount : 0;
 
@@ -301,7 +330,8 @@ namespace InvoiceDownloader
                                item.InvoiceCode, 
                                InvoiceHandle(item.Status),
                                item.BranchName,
-                               item.CustomerCode, 
+                               item.CustomerCode,
+                               item.CustomerGroup,
                                item.CustomerName, 
                                item.CreatedDate, 
                                item.ProductCode, 
@@ -316,7 +346,15 @@ namespace InvoiceDownloader
                                Math.Round(item.TotalDiscount),
                                Math.Round(discountDetail),
                                Math.Round(comboDiscount),
-                               item.Unit == "TK" ? Math.Round(item.Surcharge) : Math.Round(item.TotalQuantity * item.BasePrice - discountDetail - comboDiscount)
+                               item.Unit == "TK" ? Math.Round(item.Surcharge) : Math.Round(item.TotalQuantity * item.BasePrice - discountDetail - comboDiscount),
+                               item.BanSiTVBH,
+                               item.BanLeTVBH,
+                               item.CSKHXemay,
+                               item.CSKHXetai,
+                               item.KhachLeXeNgoai,
+                               item.KhachSiXeNgoai,
+                               item.DuanTVBH,
+                               item.GiaoNemDuAn
                                //Math.Round(item.Surcharge)
                                );
             }
@@ -333,6 +371,7 @@ namespace InvoiceDownloader
                         "Tình Trạng",
                         "Cửa Hàng",
                         "Mã KH",
+                        "Nhóm KH",
                         "Tên KH",
                         "Ngày HĐ",
                         "Mã SP",
@@ -348,6 +387,14 @@ namespace InvoiceDownloader
                         "PB giảm giá",
                         "PB giảm giá Combo",
                         "Doanh thu thuần",
+                        "BanSiTVBH",
+                        "BanLeTVBH",
+                        "CSKHXemay",
+                        "CSKHXetai",
+                        "KhachLeXeNgoai",
+                        "KhachSiXeNgoai",
+                        "DuanTVBH",
+                        "GiaoNemDuAn",
                         //"Thu khác"
                     };
             DataTable table = GenerateHeader(chatsLabel);

@@ -156,7 +156,7 @@ namespace InvoiceDownloader
             var customerResponse = JsonConvert.DeserializeObject<CustomerResponse>(bodyContent);
 
             
-             return customerResponse.data;
+         return customerResponse.data;
         }
     }
 }

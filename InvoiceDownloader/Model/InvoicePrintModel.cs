@@ -9,7 +9,9 @@ namespace InvoiceDownloader.Model
     public class InvoicePrintModel
     {
         public string? InvoiceCode { get; set; }
+        public string? CustomerId { get; set; }
         public string? CustomerCode { get; set; }
+        public string? CustomerGroup { get; set; }
         public string? CustomerName { get; set; }
         public string? BranchName { get; set; }
         public int TotalQuantity { get; set; } = 0;
@@ -26,5 +28,13 @@ namespace InvoiceDownloader.Model
         public string? Unit { get; set; } 
         public DateTime? CreatedDate { get; set; }
         public int Status { get; set; }
+        public decimal BanSiTVBH { get; set; }
+        public decimal BanLeTVBH { get; set; }
+        public decimal CSKHXemay { get; set; }
+        public decimal CSKHXetai { get; set; }
+        public decimal KhachLeXeNgoai { get; set; }
+        public decimal KhachSiXeNgoai { get; set; }
+        public decimal DuanTVBH { get; set; }
+        public decimal GiaoNemDuAn { get; set; }
     }
 }
