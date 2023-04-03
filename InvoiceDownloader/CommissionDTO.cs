@@ -31,9 +31,5 @@ namespace InvoiceDownloader
         public decimal KhachLeXeNgoai { get; set; }
         [Name("KhachSiXeNgoai")]
         public decimal KhachSiXeNgoai { get; set; }
-        [Name("DuanTVBH")]
-        public decimal DuanTVBH { get; set; }
-        [Name("GiaoNemDuAn")]
-        public decimal GiaoNemDuAn { get; set; }
     }
 }

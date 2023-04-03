@@ -65,9 +65,9 @@ namespace InvoiceDownloader
 
             while (totalPage != null && result.Count < totalPage)
             {
-                var endpoint = $"https://public.kiotapi.com/invoices?" + $"fromPurchaseDate={start.ToString()}&toPurchaseDate={end.ToString()}&pageSize=100&currentItem={result.Count}";
+                var endpoint = $"https://public.kiotapi.com/invoices?" + $"fromPurchaseDate={start.ToString()}&toPurchaseDate={end.ToString()}&pageSize=100&includeInvoiceDelivery=true&currentItem={result.Count}";
                 if (branchKeys.Any())
-                    endpoint = $"https://public.kiotapi.com/invoices?" + $"fromPurchaseDate={start.ToString()}&toPurchaseDate={end.ToString()}&pageSize=100&currentItem={result.Count}&branchIds={string.Join(",",branchKeys)}";
+                    endpoint = $"https://public.kiotapi.com/invoices?" + $"fromPurchaseDate={start.ToString()}&toPurchaseDate={end.ToString()}&pageSize=100&includeInvoiceDelivery=true&currentItem={result.Count}&branchIds={string.Join(",",branchKeys)}";
 
                 var req = new HttpRequestMessage(HttpMethod.Get, endpoint);
                 var res = await _mainClient!.SendAsync(req);

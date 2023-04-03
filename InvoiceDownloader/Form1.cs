@@ -110,8 +110,6 @@ namespace InvoiceDownloader
                             i.CSKHXetai = cms.CSKHXetai;
                             i.KhachSiXeNgoai = cms.KhachSiXeNgoai;
                             i.KhachLeXeNgoai = cms.KhachLeXeNgoai;
-                            i.DuanTVBH = cms.DuanTVBH;
-                            i.GiaoNemDuAn = cms.GiaoNemDuAn;
                         }    
                     });
 
@@ -150,6 +148,7 @@ namespace InvoiceDownloader
                         CreatedDate = invoice.CreatedDate,
                         BranchName = invoice.BranchName,
                         Status = invoice.Status,
+                        Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode
                     };
                     if (!result.Any(r => r.InvoiceCode == invoiceModel.InvoiceCode))
                     {
@@ -183,6 +182,7 @@ namespace InvoiceDownloader
                                     Status = invoice.Status,
                                     ComboDiscount = comboDiscount ?? 0,
                                     ComboDiscountRaito = ((detail.Quantity * product.Quantity * product.Product?.BasePrice) / tpSubtotal) ?? 0,
+                                    Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode
                                 };
                                 result.Add(invoiceModel2);
                             }
@@ -208,6 +208,7 @@ namespace InvoiceDownloader
                             Status = invoice.Status,
                             TotalQuantity = 1,
                             ProductCode = sur.SurchargeId.ToString(),
+                            Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode
                         };
                         result.Add(invoiceModel3);
                     }    
@@ -315,7 +316,7 @@ namespace InvoiceDownloader
                 table.Columns[18].DataType = typeof(decimal);
                 table.Columns[19].DataType = typeof(decimal);
                 table.Columns[20].DataType = typeof(decimal);
-                table.Columns[21].DataType = typeof(decimal);
+       
                 table.Columns[22].DataType = typeof(decimal);
                 table.Columns[23].DataType = typeof(decimal);
                 table.Columns[24].DataType = typeof(decimal);
@@ -323,6 +324,8 @@ namespace InvoiceDownloader
                 table.Columns[26].DataType = typeof(decimal);
                 table.Columns[27].DataType = typeof(decimal);
                 table.Columns[28].DataType = typeof(decimal);
+                table.Columns[29].DataType = typeof(decimal);
+
                 var discountDetail = item.Unit == "TP" ? item.DiscountDetails * item.ComboDiscountRaito : item.DiscountDetails;
                 var comboDiscount = item.Unit == "TP" ? item.ComboDiscount : 0;
 
@@ -347,14 +350,15 @@ namespace InvoiceDownloader
                                Math.Round(discountDetail),
                                Math.Round(comboDiscount),
                                item.Unit == "TK" ? Math.Round(item.Surcharge) : Math.Round(item.TotalQuantity * item.BasePrice - discountDetail - comboDiscount),
+                               item.Delivery,
+                               BHCommisionCount(item),
+                               VCCommisionCount(item),
                                item.BanSiTVBH,
                                item.BanLeTVBH,
                                item.CSKHXemay,
                                item.CSKHXetai,
                                item.KhachLeXeNgoai,
-                               item.KhachSiXeNgoai,
-                               item.DuanTVBH,
-                               item.GiaoNemDuAn
+                               item.KhachSiXeNgoai
                                //Math.Round(item.Surcharge)
                                );
             }
@@ -387,14 +391,15 @@ namespace InvoiceDownloader
                         "PB giảm giá",
                         "PB giảm giá Combo",
                         "Doanh thu thuần",
+                        "Giao hàng",
+                        "HH TVBH",
+                        "HH CSKH",
                         "BanSiTVBH",
                         "BanLeTVBH",
                         "CSKHXemay",
                         "CSKHXetai",
                         "KhachLeXeNgoai",
-                        "KhachSiXeNgoai",
-                        "DuanTVBH",
-                        "GiaoNemDuAn",
+                        "KhachSiXeNgoai"
                         //"Thu khác"
                     };
             DataTable table = GenerateHeader(chatsLabel);
@@ -646,6 +651,45 @@ namespace InvoiceDownloader
                 txtFilePath.Text = openFileDialog1.FileName;
             }
             await ReadCommission();
+        }
+
+        private decimal BHCommisionCount(InvoicePrintModel item)
+        {
+            var discountDetail = item.Unit == "TP" ? item.DiscountDetails * item.ComboDiscountRaito : item.DiscountDetails;
+            var comboDiscount = item.Unit == "TP" ? item.ComboDiscount : 0;
+            var dt = item.Unit == "TK" ? Math.Round(item.Surcharge) : Math.Round(item.TotalQuantity * item.BasePrice - discountDetail - comboDiscount);
+            if (item.Unit == "TP" || dt < 50000)
+                return 0;
+
+            decimal hhbh = item.CustomerGroup == "Bán Sỉ" ? item.TotalQuantity * item.BanSiTVBH : item.TotalQuantity * item.BanLeTVBH;
+            
+            return hhbh;
+        }
+        private decimal VCCommisionCount(InvoicePrintModel item)
+        {
+            var discountDetail = item.Unit == "TP" ? item.DiscountDetails * item.ComboDiscountRaito : item.DiscountDetails;
+            var comboDiscount = item.Unit == "TP" ? item.ComboDiscount : 0;
+            var dt = item.Unit == "TK" ? Math.Round(item.Surcharge) : Math.Round(item.TotalQuantity * item.BasePrice - discountDetail - comboDiscount);
+            if (item.Unit == "TP" || dt < 50000)
+                return 0;
+
+            decimal hhvc = 0;
+            switch (item.Delivery)
+            {
+                case "XM":
+                    hhvc = item.TotalQuantity * item.CSKHXemay;
+                    break;
+                case "XT":
+                    hhvc = item.TotalQuantity * item.CSKHXetai;
+                    break;
+                case "XN":
+                    hhvc = item.CustomerGroup == "Bán Sỉ" ? item.TotalQuantity * item.KhachSiXeNgoai : item.TotalQuantity * item.KhachLeXeNgoai;
+                    break;
+                default:
+                    hhvc = 0;
+                    break;
+            }
+            return hhvc;
         }
     }
 }

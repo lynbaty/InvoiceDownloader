@@ -19,6 +19,7 @@ namespace InvoiceDownloader.Model
         public DateTime? CreatedDate { get; set; }
         public List<InvoiceDetail> InvoiceDetails { set; get; } = new();
         public List<InvoiceOrderSurcharges> invoiceOrderSurcharges { set; get; } = new();
+        public InvoiceDelivery InvoiceDelivery { set; get; } = new();
 
     }
 }

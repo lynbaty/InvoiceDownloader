@@ -1,0 +1,14 @@
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\InvoiceDownloader.exe
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\InvoiceDownloader.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\InvoiceDownloader.deps.json
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\InvoiceDownloader.runtimeconfig.json
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\InvoiceDownloader.pdb
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\ClosedXML.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\CsvHelper.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\DocumentFormat.OpenXml.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\ExcelNumberFormat.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\Irony.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\Microsoft.Office.Interop.Excel.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\Newtonsoft.Json.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\SixLabors.Fonts.dll
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Release\net6.0-windows\publish\XLParser.dll

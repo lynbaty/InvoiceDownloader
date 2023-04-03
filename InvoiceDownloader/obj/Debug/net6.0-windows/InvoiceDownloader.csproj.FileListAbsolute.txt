@@ -84,7 +84,6 @@ D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\Mic
 D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\Newtonsoft.Json.dll
 D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\SixLabors.Fonts.dll
 D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\XLParser.dll
-D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.csproj.AssemblyReference.cache
 D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.Form1.resources
 D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.csproj.GenerateResource.cache
 D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.GeneratedMSBuildEditorConfig.editorconfig
