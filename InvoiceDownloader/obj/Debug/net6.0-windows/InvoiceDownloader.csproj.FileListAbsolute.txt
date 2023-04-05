@@ -95,3 +95,4 @@ D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\Inv
 D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\ref\InvoiceDownloader.dll
 D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.pdb
 D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.genruntimeconfig.cache
+D:\.Net\Invoice\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.csproj.AssemblyReference.cache

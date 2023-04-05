@@ -14,12 +14,13 @@ namespace InvoiceDownloader.Model
         public string? Code { get; set; }
         public string? CustomerName { get; set; }
         public string? CustomerId { get; set; }
-
+        public int saleChannelId { get; set; } = 0;
         public string? BranchName { get; set; }
         public DateTime? CreatedDate { get; set; }
         public List<InvoiceDetail> InvoiceDetails { set; get; } = new();
         public List<InvoiceOrderSurcharges> invoiceOrderSurcharges { set; get; } = new();
         public InvoiceDelivery InvoiceDelivery { set; get; } = new();
+        public SaleChannel SaleChannel { set; get; } = new();
 
     }
 }

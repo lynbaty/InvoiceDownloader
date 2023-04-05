@@ -130,8 +130,6 @@ namespace InvoiceDownloader
 
         public async Task<List<Product>> GetHelperProducts()
         {
-            var result = new List<Product>();
-
             var endpoint = $"https://public.kiotapi.com/products?" + $"productType=3&includeMaterial=true&pageSize=100";
 
             var req = new HttpRequestMessage(HttpMethod.Get, endpoint);
@@ -141,6 +139,19 @@ namespace InvoiceDownloader
             var invoiceResponse = JsonConvert.DeserializeObject<ProductResponse>(bodyContent);
 
             return invoiceResponse?.Data!;
+        }
+
+        public async Task<List<SaleChannel>> GetSaleChannel()
+        {
+            var endpoint = "https://public.kiotapi.com/salechannel";
+
+            var req = new HttpRequestMessage(HttpMethod.Get, endpoint);
+            var res = await _mainClient!.SendAsync(req);
+
+            var bodyContent = await res.Content.ReadAsStringAsync();
+            var saleChannelResponse = JsonConvert.DeserializeObject<SaleChannelResponse>(bodyContent);
+
+            return saleChannelResponse?.Data!;
         }
 
         public async Task<List<CustomerGroup>> GetCustomer()

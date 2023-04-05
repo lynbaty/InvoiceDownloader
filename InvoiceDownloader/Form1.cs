@@ -13,6 +13,7 @@ namespace InvoiceDownloader
 
         public List<string> _helperProducts { get; set; } = new();
         public List<CommissionDTO> _commissions { get; set; } = new();
+        public List<SaleChannel> _saleChannels { get; set; } = new();
 
 
         private readonly ClientService _clientService;
@@ -51,6 +52,7 @@ namespace InvoiceDownloader
                 customerGroup.ForEach(g => g.customerGroupDetails.ForEach(cd => cd.GroupName = g.Name));
                 _customers = customerGroup.SelectMany(g => g.customerGroupDetails).ToList();
                 _helperProducts = (await _clientService.GetHelperProducts()).Select(p => p.Code).ToList()!;
+                _saleChannels = await _clientService.GetSaleChannel();
                 branches.ForEach(b => listView1.Items.Add(new ListViewItem(b.BranchName, b.Id)));
                 errorText1.Text = "Loaded branches successfully";
             }    
@@ -148,7 +150,9 @@ namespace InvoiceDownloader
                         CreatedDate = invoice.CreatedDate,
                         BranchName = invoice.BranchName,
                         Status = invoice.Status,
-                        Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode
+                        Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode,
+                        DeliveryMan = invoice.InvoiceDelivery.PartnerDelivery.Name,
+                        ChannelId = invoice.saleChannelId
                     };
                     if (!result.Any(r => r.InvoiceCode == invoiceModel.InvoiceCode))
                     {
@@ -182,7 +186,10 @@ namespace InvoiceDownloader
                                     Status = invoice.Status,
                                     ComboDiscount = comboDiscount ?? 0,
                                     ComboDiscountRaito = ((detail.Quantity * product.Quantity * product.Product?.BasePrice) / tpSubtotal) ?? 0,
-                                    Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode
+                                    Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode,
+                                    DeliveryMan = invoice.InvoiceDelivery.PartnerDelivery.Name,
+                                    ChannelId = invoice.saleChannelId
+
                                 };
                                 result.Add(invoiceModel2);
                             }
@@ -208,7 +215,11 @@ namespace InvoiceDownloader
                             Status = invoice.Status,
                             TotalQuantity = 1,
                             ProductCode = sur.SurchargeId.ToString(),
-                            Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode
+                            Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode,
+                            DeliveryMan = invoice.InvoiceDelivery.PartnerDelivery.Name,
+                            ChannelId = invoice.saleChannelId
+
+
                         };
                         result.Add(invoiceModel3);
                     }    
@@ -306,6 +317,8 @@ namespace InvoiceDownloader
                 if (i > 0)
                     itemPrev = invoices[i - 1];
 
+                var validDelivery = new List<string> { "XM", "XT", "XN" };
+
                 table.Columns[11].DataType = typeof(int);
                 table.Columns[12].DataType = typeof(decimal);
                 table.Columns[13].DataType = typeof(decimal);
@@ -316,15 +329,15 @@ namespace InvoiceDownloader
                 table.Columns[18].DataType = typeof(decimal);
                 table.Columns[19].DataType = typeof(decimal);
                 table.Columns[20].DataType = typeof(decimal);
-       
-                table.Columns[22].DataType = typeof(decimal);
-                table.Columns[23].DataType = typeof(decimal);
+
                 table.Columns[24].DataType = typeof(decimal);
                 table.Columns[25].DataType = typeof(decimal);
                 table.Columns[26].DataType = typeof(decimal);
                 table.Columns[27].DataType = typeof(decimal);
                 table.Columns[28].DataType = typeof(decimal);
                 table.Columns[29].DataType = typeof(decimal);
+                table.Columns[30].DataType = typeof(decimal);
+                table.Columns[31].DataType = typeof(decimal);
 
                 var discountDetail = item.Unit == "TP" ? item.DiscountDetails * item.ComboDiscountRaito : item.DiscountDetails;
                 var comboDiscount = item.Unit == "TP" ? item.ComboDiscount : 0;
@@ -350,7 +363,9 @@ namespace InvoiceDownloader
                                Math.Round(discountDetail),
                                Math.Round(comboDiscount),
                                item.Unit == "TK" ? Math.Round(item.Surcharge) : Math.Round(item.TotalQuantity * item.BasePrice - discountDetail - comboDiscount),
-                               item.Delivery,
+                               _saleChannels.FirstOrDefault(s => s.Id == item.ChannelId)?.Name ?? string.Empty,
+                               validDelivery.Contains(item.Delivery ?? "NO") ? item.DeliveryMan : string.Empty,
+                               validDelivery.Contains(item.Delivery ?? "NO") ? item.Delivery : string.Empty,
                                BHCommisionCount(item),
                                VCCommisionCount(item),
                                item.BanSiTVBH,
@@ -391,6 +406,8 @@ namespace InvoiceDownloader
                         "PB giảm giá",
                         "PB giảm giá Combo",
                         "Doanh thu thuần",
+                        "Kênh bán hàng",
+                        "Đối tác giao hàng",
                         "Giao hàng",
                         "HH TVBH",
                         "HH CSKH",
@@ -661,7 +678,7 @@ namespace InvoiceDownloader
             if (item.Unit == "TP" || dt < 50000)
                 return 0;
 
-            decimal hhbh = item.CustomerGroup == "Bán Sỉ" ? item.TotalQuantity * item.BanSiTVBH : item.TotalQuantity * item.BanLeTVBH;
+            decimal hhbh = (item.CustomerGroup == "Bán Sỉ" || item.ChannelId != 0) ? item.TotalQuantity * item.BanSiTVBH : item.TotalQuantity * item.BanLeTVBH;
             
             return hhbh;
         }

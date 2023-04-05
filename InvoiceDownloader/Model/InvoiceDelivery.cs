@@ -10,5 +10,6 @@ namespace InvoiceDownloader.Model
     {
         public int Status { get; set; } = 1;
         public string? DeliveryCode { get; set; }
+        public PartnerDelivery PartnerDelivery { get; set; } = new();
     }
 }

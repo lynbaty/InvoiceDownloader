@@ -14,6 +14,8 @@ namespace InvoiceDownloader.Model
         public string? CustomerGroup { get; set; }
         public string? CustomerName { get; set; }
         public string? BranchName { get; set; }
+        public string? ChannelName { get; set; }
+        public int ChannelId { get; set; }
         public int TotalQuantity { get; set; } = 0;
         public decimal BasePrice { get; set; } = 0;
         public decimal SubTotal { get; set; } = 0;
@@ -29,6 +31,7 @@ namespace InvoiceDownloader.Model
         public DateTime? CreatedDate { get; set; }
         public int Status { get; set; }
         public string? Delivery { set; get; }
+        public string? DeliveryMan { set; get; }
         public decimal BanSiTVBH { get; set; }
         public decimal BanLeTVBH { get; set; }
         public decimal CSKHXemay { get; set; }
