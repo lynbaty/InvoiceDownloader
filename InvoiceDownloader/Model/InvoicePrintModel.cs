@@ -10,8 +10,10 @@ namespace InvoiceDownloader.Model
     {
         public string? InvoiceCode { get; set; }
         public string? CustomerId { get; set; }
+        public string? SoldByName { get; set; }
         public string? CustomerCode { get; set; }
         public string? CustomerGroup { get; set; }
+        public string? CustomerGroupFull { get; set; }
         public string? CustomerName { get; set; }
         public string? BranchName { get; set; }
         public string? ChannelName { get; set; }
@@ -38,5 +40,6 @@ namespace InvoiceDownloader.Model
         public decimal CSKHXetai { get; set; }
         public decimal KhachLeXeNgoai { get; set; }
         public decimal KhachSiXeNgoai { get; set; }
+        public bool PVC { get; set; } = false;
     }
 }

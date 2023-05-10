@@ -10,6 +10,7 @@ namespace InvoiceDownloader
         public List<int> _branchKeys { get; set; } = new();
         public List<Product> _products { get; set; } = new();
         public List<CustomerDetail> _customers { get; set; } = new();
+        public List<CustomerDetail> _customersFull { get; set; } = new();
 
         public List<string> _helperProducts { get; set; } = new();
         public List<CommissionDTO> _commissions { get; set; } = new();
@@ -48,9 +49,12 @@ namespace InvoiceDownloader
                 errorText1.Text = "Loading branches...";
                 var branches = await _clientService.prepareValue(token);
                 _products = await _clientService.GetProductTree();
-                var customerGroup = (await _clientService.GetCustomer()).Where(c => c.Id == 3242 || c.Id == 3280).ToList();
+                var cus = await _clientService.GetCustomer();
+                var customerGroup = cus.Where(c => c.Id == 3242 || c.Id == 3280).ToList();
                 customerGroup.ForEach(g => g.customerGroupDetails.ForEach(cd => cd.GroupName = g.Name));
+                cus.ForEach(g => g.customerGroupDetails.ForEach(cd => cd.GroupName = g.Name));
                 _customers = customerGroup.SelectMany(g => g.customerGroupDetails).ToList();
+                _customersFull = cus.SelectMany(g => g.customerGroupDetails).ToList();
                 _helperProducts = (await _clientService.GetHelperProducts()).Select(p => p.Code).ToList()!;
                 _saleChannels = await _clientService.GetSaleChannel();
                 branches.ForEach(b => listView1.Items.Add(new ListViewItem(b.BranchName, b.Id)));
@@ -99,7 +103,11 @@ namespace InvoiceDownloader
 
                 var invoicePrintModels = GetPrintModels(invoices);
                 invoicePrintModels = UpdateDiscountDetails(invoicePrintModels);
-                invoicePrintModels.ForEach(i => i.CustomerGroup = _customers.FirstOrDefault(c => c.CustomerId.ToString().Equals(i.CustomerId))?.GroupName ?? "Bán Lẻ");
+                invoicePrintModels.ForEach(i => 
+                {
+                    i.CustomerGroup = _customers.FirstOrDefault(c => c.CustomerId.ToString().Equals(i.CustomerId))?.GroupName ?? "Bán Lẻ";
+                    i.CustomerGroupFull = _customersFull.FirstOrDefault(c => c.CustomerId.ToString().Equals(i.CustomerId))?.GroupName ?? "Unknown";
+                });
                 if (_commissions.Count > 0)
                     invoicePrintModels.ForEach(i =>
                     {
@@ -133,11 +141,14 @@ namespace InvoiceDownloader
             var result = new List<InvoicePrintModel>();
             foreach (var invoice in invoices)
             {
+                if (invoice.InvoiceDetails.Any(id => id.ProductCode == "PVC"))
+                    invoice.PVC = true;
                 foreach(var detail in invoice.InvoiceDetails)
                 {
                     var invoiceModel = new InvoicePrintModel
                     {
                         InvoiceCode = invoice.Code,
+                        SoldByName = invoice.SoldByName,
                         CustomerId = invoice.CustomerId,
                         CustomerCode = invoice.CustomerCode,
                         CustomerName = invoice.CustomerName,
@@ -152,7 +163,8 @@ namespace InvoiceDownloader
                         Status = invoice.Status,
                         Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode,
                         DeliveryMan = invoice.InvoiceDelivery.PartnerDelivery.Name,
-                        ChannelId = invoice.saleChannelId
+                        ChannelId = invoice.saleChannelId,
+                        PVC = invoice.PVC
                     };
                     if (!result.Any(r => r.InvoiceCode == invoiceModel.InvoiceCode))
                     {
@@ -173,6 +185,7 @@ namespace InvoiceDownloader
                                 var invoiceModel2 = new InvoicePrintModel
                                 {
                                     InvoiceCode = invoice.Code,
+                                    SoldByName = invoice.SoldByName,
                                     CustomerCode = invoice.CustomerCode,
                                     CustomerId = invoice.CustomerId,
                                     CustomerName = invoice.CustomerName,
@@ -188,8 +201,8 @@ namespace InvoiceDownloader
                                     ComboDiscountRaito = ((detail.Quantity * product.Quantity * product.Product?.BasePrice) / tpSubtotal) ?? 0,
                                     Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode,
                                     DeliveryMan = invoice.InvoiceDelivery.PartnerDelivery.Name,
-                                    ChannelId = invoice.saleChannelId
-
+                                    ChannelId = invoice.saleChannelId,
+                                    PVC = invoice.PVC
                                 };
                                 result.Add(invoiceModel2);
                             }
@@ -204,6 +217,7 @@ namespace InvoiceDownloader
                         var invoiceModel3 = new InvoicePrintModel
                         {
                             InvoiceCode = invoice.Code,
+                            SoldByName = invoice.SoldByName,
                             CustomerCode = invoice.CustomerCode,
                             CustomerName = invoice.CustomerName,
                             CustomerId= invoice.CustomerId,
@@ -217,8 +231,8 @@ namespace InvoiceDownloader
                             ProductCode = sur.SurchargeId.ToString(),
                             Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode,
                             DeliveryMan = invoice.InvoiceDelivery.PartnerDelivery.Name,
-                            ChannelId = invoice.saleChannelId
-
+                            ChannelId = invoice.saleChannelId,
+                            PVC = invoice.PVC
 
                         };
                         result.Add(invoiceModel3);
@@ -319,9 +333,7 @@ namespace InvoiceDownloader
 
                 var validDelivery = new List<string> { "XM", "XT", "XN" };
 
-                table.Columns[11].DataType = typeof(int);
-                table.Columns[12].DataType = typeof(decimal);
-                table.Columns[13].DataType = typeof(decimal);
+                table.Columns[13].DataType = typeof(int);
                 table.Columns[14].DataType = typeof(decimal);
                 table.Columns[15].DataType = typeof(decimal);
                 table.Columns[16].DataType = typeof(decimal);
@@ -329,25 +341,29 @@ namespace InvoiceDownloader
                 table.Columns[18].DataType = typeof(decimal);
                 table.Columns[19].DataType = typeof(decimal);
                 table.Columns[20].DataType = typeof(decimal);
+                table.Columns[21].DataType = typeof(decimal);
+                table.Columns[22].DataType = typeof(decimal);
 
-                table.Columns[24].DataType = typeof(decimal);
-                table.Columns[25].DataType = typeof(decimal);
                 table.Columns[26].DataType = typeof(decimal);
                 table.Columns[27].DataType = typeof(decimal);
                 table.Columns[28].DataType = typeof(decimal);
                 table.Columns[29].DataType = typeof(decimal);
                 table.Columns[30].DataType = typeof(decimal);
                 table.Columns[31].DataType = typeof(decimal);
+                table.Columns[32].DataType = typeof(decimal);
+                table.Columns[33].DataType = typeof(decimal);
 
                 var discountDetail = item.Unit == "TP" ? item.DiscountDetails * item.ComboDiscountRaito : item.DiscountDetails;
                 var comboDiscount = item.Unit == "TP" ? item.ComboDiscount : 0;
 
                 table.Rows.Add(item.Unit == "TP" ? "TP" : i + 1, 
-                               item.InvoiceCode, 
+                               item.InvoiceCode,
+                               item.SoldByName,
                                InvoiceHandle(item.Status),
                                item.BranchName,
                                item.CustomerCode,
                                item.CustomerGroup,
+                               item.CustomerGroupFull,
                                item.CustomerName, 
                                item.CreatedDate, 
                                item.ProductCode, 
@@ -387,10 +403,12 @@ namespace InvoiceDownloader
             string[] chatsLabel = {
                         "STT",
                         "Mã HĐ",
+                        "Người bán",
                         "Tình Trạng",
                         "Cửa Hàng",
                         "Mã KH",
                         "Nhóm KH",
+                        "Nhóm KH Full",
                         "Tên KH",
                         "Ngày HĐ",
                         "Mã SP",
@@ -672,24 +690,30 @@ namespace InvoiceDownloader
 
         private decimal BHCommisionCount(InvoicePrintModel item)
         {
-            var discountDetail = item.Unit == "TP" ? item.DiscountDetails * item.ComboDiscountRaito : item.DiscountDetails;
-            var comboDiscount = item.Unit == "TP" ? item.ComboDiscount : 0;
-            var dt = item.Unit == "TK" ? Math.Round(item.Surcharge) : Math.Round(item.TotalQuantity * item.BasePrice - discountDetail - comboDiscount);
-            if (item.Unit == "TP" || dt < 50000)
+            var dt = item.Unit == "TK" ? Math.Round(item.Surcharge) : Math.Round(item.SubTotal);
+            if (dt < 50000)
                 return 0;
 
-            decimal hhbh = (item.CustomerGroup == "Bán Sỉ" || item.ChannelId != 0) ? item.TotalQuantity * item.BanSiTVBH : item.TotalQuantity * item.BanLeTVBH;
-            
-            return hhbh;
+            if(item.CustomerGroup == "Bán Sỉ" || item.ChannelId != 0)
+            {
+                if (dt >= 400000)
+                    return item.TotalQuantity * item.BanSiTVBH;
+                else
+                    return 6000;
+            }else
+            {
+                if (dt >= 400000)
+                    return item.TotalQuantity * item.BanLeTVBH;
+                else 
+                    return 12000;
+            }    
         }
         private decimal VCCommisionCount(InvoicePrintModel item)
         {
-            var discountDetail = item.Unit == "TP" ? item.DiscountDetails * item.ComboDiscountRaito : item.DiscountDetails;
-            var comboDiscount = item.Unit == "TP" ? item.ComboDiscount : 0;
-            var dt = item.Unit == "TK" ? Math.Round(item.Surcharge) : Math.Round(item.TotalQuantity * item.BasePrice - discountDetail - comboDiscount);
-            if (item.Unit == "TP" || dt < 50000)
+            var dt = item.Unit == "TK" ? Math.Round(item.Surcharge) : Math.Round(item.SubTotal);
+            if (dt < 50000)
                 return 0;
-
+            
             decimal hhvc = 0;
             switch (item.Delivery)
             {
@@ -706,7 +730,7 @@ namespace InvoiceDownloader
                     hhvc = 0;
                     break;
             }
-            return hhvc;
+            return (item.CustomerGroup == "Bán Sỉ" && item.PVC) ? hhvc * 2 : hhvc;
         }
     }
 }
