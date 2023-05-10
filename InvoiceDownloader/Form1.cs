@@ -691,7 +691,7 @@ namespace InvoiceDownloader
         private decimal BHCommisionCount(InvoicePrintModel item)
         {
             var dt = item.Unit == "TK" ? Math.Round(item.Surcharge) : Math.Round(item.SubTotal);
-            if (dt < 50000)
+            if (dt < 50000 || item.BanSiTVBH == 0)
                 return 0;
 
             if(item.CustomerGroup == "Bán Sỉ" || item.ChannelId != 0)
