@@ -4897,19 +4897,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\boank\\.nuget\\packages\\": {}
+    "C:\\Users\\btan1\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\.Net\\Invoice\\InvoiceDownloader\\InvoiceDownloader\\InvoiceDownloader.csproj",
+      "projectUniqueName": "D:\\.NET\\InvoiceDownloader\\InvoiceDownloader\\InvoiceDownloader.csproj",
       "projectName": "InvoiceDownloader",
-      "projectPath": "D:\\.Net\\Invoice\\InvoiceDownloader\\InvoiceDownloader\\InvoiceDownloader.csproj",
-      "packagesPath": "C:\\Users\\boank\\.nuget\\packages\\",
-      "outputPath": "D:\\.Net\\Invoice\\InvoiceDownloader\\InvoiceDownloader\\obj\\",
+      "projectPath": "D:\\.NET\\InvoiceDownloader\\InvoiceDownloader\\InvoiceDownloader.csproj",
+      "packagesPath": "C:\\Users\\btan1\\.nuget\\packages\\",
+      "outputPath": "D:\\.NET\\InvoiceDownloader\\InvoiceDownloader\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\boank\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\btan1\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4970,7 +4970,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -51,6 +51,8 @@
             this.txtSecretKey.Name = "txtSecretKey";
             this.txtSecretKey.Size = new System.Drawing.Size(545, 23);
             this.txtSecretKey.TabIndex = 0;
+            this.txtSecretKey.Text = "48003E0F6F7B9500EA6D445B70113421A2CAC8C4";
+            this.txtSecretKey.TextChanged += new System.EventHandler(this.txtSecretKey_TextChanged);
             // 
             // label1
             // 

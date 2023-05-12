@@ -690,7 +690,7 @@ namespace InvoiceDownloader
 
         private decimal BHCommisionCount(InvoicePrintModel item)
         {
-            var dt = item.Unit == "TK" ? Math.Round(item.Surcharge) : Math.Round(item.SubTotal);
+            var dt = item.Unit == "TK" ? Math.Round(item.Surcharge/item.TotalQuantity) : Math.Round(item.SubTotal/item.TotalQuantity);
             if (dt < 50000 || item.BanSiTVBH == 0)
                 return 0;
 
@@ -699,18 +699,18 @@ namespace InvoiceDownloader
                 if (dt >= 400000)
                     return item.TotalQuantity * item.BanSiTVBH;
                 else
-                    return 6000;
+                    return item.TotalQuantity * 6000;
             }else
             {
                 if (dt >= 400000)
                     return item.TotalQuantity * item.BanLeTVBH;
                 else 
-                    return 12000;
+                    return item.TotalQuantity * 12000;
             }    
         }
         private decimal VCCommisionCount(InvoicePrintModel item)
         {
-            var dt = item.Unit == "TK" ? Math.Round(item.Surcharge) : Math.Round(item.SubTotal);
+            var dt = item.Unit == "TK" ? Math.Round(item.Surcharge/item.TotalQuantity) : Math.Round(item.SubTotal / item.TotalQuantity);
             if (dt < 50000)
                 return 0;
             
@@ -731,6 +731,11 @@ namespace InvoiceDownloader
                     break;
             }
             return (item.CustomerGroup == "Bán Sỉ" && item.PVC) ? hhvc * 2 : hhvc;
+        }
+
+        private void txtSecretKey_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
