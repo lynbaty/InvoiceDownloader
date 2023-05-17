@@ -711,20 +711,29 @@ namespace InvoiceDownloader
         private decimal VCCommisionCount(InvoicePrintModel item)
         {
             var dt = item.Unit == "TK" ? Math.Round(item.Surcharge/item.TotalQuantity) : Math.Round(item.SubTotal / item.TotalQuantity);
-            if (dt < 50000)
+            if (dt < 50_000)
                 return 0;
             
             decimal hhvc = 0;
             switch (item.Delivery)
             {
                 case "XM":
-                    hhvc = item.TotalQuantity * item.CSKHXemay;
+                    if (dt < 400_000)
+                        hhvc = item.TotalQuantity * 9_000;
+                    else
+                        hhvc = item.TotalQuantity * item.CSKHXemay;
                     break;
                 case "XT":
-                    hhvc = item.TotalQuantity * item.CSKHXetai;
+                    if (dt < 400_000)
+                        hhvc = item.TotalQuantity * 9_000;
+                    else
+                        hhvc = item.TotalQuantity * item.CSKHXetai;
                     break;
                 case "XN":
-                    hhvc = item.CustomerGroup == "Bán Sỉ" ? item.TotalQuantity * item.KhachSiXeNgoai : item.TotalQuantity * item.KhachLeXeNgoai;
+                    if (dt < 400_000)
+                        hhvc = item.TotalQuantity * 9_000;
+                    else
+                        hhvc = item.CustomerGroup == "Bán Sỉ" ? item.TotalQuantity * item.KhachSiXeNgoai : item.TotalQuantity * item.KhachLeXeNgoai;
                     break;
                 default:
                     hhvc = 0;
