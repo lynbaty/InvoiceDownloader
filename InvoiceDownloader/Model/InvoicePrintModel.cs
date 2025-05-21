@@ -41,5 +41,6 @@ namespace InvoiceDownloader.Model
         public decimal KhachLeXeNgoai { get; set; }
         public decimal KhachSiXeNgoai { get; set; }
         public bool PVC { get; set; } = false;
+        public decimal DTT { get; set; }
     }
 }

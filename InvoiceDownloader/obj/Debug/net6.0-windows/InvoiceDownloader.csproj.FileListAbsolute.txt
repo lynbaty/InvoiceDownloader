@@ -15,7 +15,6 @@ D:\.Net\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\ref\Invoice
 D:\.Net\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.pdb
 D:\.Net\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.genruntimeconfig.cache
 D:\.Net\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\Newtonsoft.Json.dll
-D:\.Net\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.csproj.CopyComplete
 D:\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\InvoiceDownloader.exe
 D:\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\InvoiceDownloader.deps.json
 D:\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\InvoiceDownloader.runtimeconfig.json
@@ -104,3 +103,5 @@ D:\.NET\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\Microsoft.O
 D:\.NET\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\SixLabors.Fonts.dll
 D:\.NET\InvoiceDownloader\InvoiceDownloader\bin\Debug\net6.0-windows\XLParser.dll
 D:\.NET\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\refint\InvoiceDownloader.dll
+D:\.NET\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceDownloader.sourcelink.json
+D:\.NET\InvoiceDownloader\InvoiceDownloader\obj\Debug\net6.0-windows\InvoiceD.FB99D637.Up2Date
