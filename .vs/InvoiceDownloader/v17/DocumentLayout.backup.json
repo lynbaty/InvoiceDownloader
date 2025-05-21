@@ -3,10 +3,16 @@
   "WorkspaceRootPath": "D:\\.NET\\InvoiceDownloader\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\lynbaty\\AppData\\Local\\SourceServer\\8be6c142b61839a9568d6d4a440e57cf5fbf03ba8814bf3aaa939dae4ed28307\\InvoiceDownloader\\Form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3CD9BE7D-06E4-4B12-8002-26EEE3FF6181}|InvoiceDownloader\\InvoiceDownloader.csproj|d:\\.net\\invoicedownloader\\invoicedownloader\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CD9BE7D-06E4-4B12-8002-26EEE3FF6181}|InvoiceDownloader\\InvoiceDownloader.csproj|solutionrelative:invoicedownloader\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\lynbaty\\AppData\\Local\\SourceServer\\d1e58669c0228155300d78a4b8db9d7eb86c589e18e344832ddd1c94519ebdbf\\InvoiceDownloader\\Form1.Designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3CD9BE7D-06E4-4B12-8002-26EEE3FF6181}|InvoiceDownloader\\InvoiceDownloader.csproj|d:\\.net\\invoicedownloader\\invoicedownloader\\model\\invoiceprintmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CD9BE7D-06E4-4B12-8002-26EEE3FF6181}|InvoiceDownloader\\InvoiceDownloader.csproj|solutionrelative:invoicedownloader\\model\\invoiceprintmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CD9BE7D-06E4-4B12-8002-26EEE3FF6181}|InvoiceDownloader\\InvoiceDownloader.csproj|d:\\.net\\invoicedownloader\\invoicedownloader\\model\\brandresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3CD9BE7D-06E4-4B12-8002-26EEE3FF6181}|InvoiceDownloader\\InvoiceDownloader.csproj|solutionrelative:invoicedownloader\\model\\brandresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -16,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -28,24 +34,41 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Form1.cs",
-              "DocumentMoniker": "C:\\Users\\lynbaty\\AppData\\Local\\SourceServer\\8be6c142b61839a9568d6d4a440e57cf5fbf03ba8814bf3aaa939dae4ed28307\\InvoiceDownloader\\Form1.cs",
-              "ToolTip": "C:\\Users\\lynbaty\\AppData\\Local\\SourceServer\\8be6c142b61839a9568d6d4a440e57cf5fbf03ba8814bf3aaa939dae4ed28307\\InvoiceDownloader\\Form1.cs",
-              "ViewState": "AgIAAI4BAAAAAAAAAAAwwB0CAAA7AAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "InvoicePrintModel.cs",
+              "DocumentMoniker": "D:\\.NET\\InvoiceDownloader\\InvoiceDownloader\\Model\\InvoicePrintModel.cs",
+              "RelativeDocumentMoniker": "InvoiceDownloader\\Model\\InvoicePrintModel.cs",
+              "ToolTip": "D:\\.NET\\InvoiceDownloader\\InvoiceDownloader\\Model\\InvoicePrintModel.cs",
+              "RelativeToolTip": "InvoiceDownloader\\Model\\InvoicePrintModel.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAkwCwAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-11T12:46:56.241Z",
+              "WhenOpened": "2025-05-21T15:21:46.519Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Form1.Designer.cs",
-              "DocumentMoniker": "C:\\Users\\lynbaty\\AppData\\Local\\SourceServer\\d1e58669c0228155300d78a4b8db9d7eb86c589e18e344832ddd1c94519ebdbf\\InvoiceDownloader\\Form1.Designer.cs",
-              "ToolTip": "C:\\Users\\lynbaty\\AppData\\Local\\SourceServer\\d1e58669c0228155300d78a4b8db9d7eb86c589e18e344832ddd1c94519ebdbf\\InvoiceDownloader\\Form1.Designer.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "D:\\.NET\\InvoiceDownloader\\InvoiceDownloader\\Form1.cs",
+              "RelativeDocumentMoniker": "InvoiceDownloader\\Form1.cs",
+              "ToolTip": "D:\\.NET\\InvoiceDownloader\\InvoiceDownloader\\Form1.cs*",
+              "RelativeToolTip": "InvoiceDownloader\\Form1.cs*",
+              "ViewState": "AgIAAK4BAAAAAAAAAADwv9ABAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-11T12:46:54.751Z",
+              "WhenOpened": "2025-05-21T14:40:24.05Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BrandResponse.cs",
+              "DocumentMoniker": "D:\\.NET\\InvoiceDownloader\\InvoiceDownloader\\Model\\BrandResponse.cs",
+              "RelativeDocumentMoniker": "InvoiceDownloader\\Model\\BrandResponse.cs",
+              "ToolTip": "D:\\.NET\\InvoiceDownloader\\InvoiceDownloader\\Model\\BrandResponse.cs",
+              "RelativeToolTip": "InvoiceDownloader\\Model\\BrandResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-21T14:31:43.683Z",
               "EditorCaption": ""
             }
           ]

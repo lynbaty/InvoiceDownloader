@@ -202,7 +202,8 @@ namespace InvoiceDownloader
                                     Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode,
                                     DeliveryMan = invoice.InvoiceDelivery.PartnerDelivery.Name,
                                     ChannelId = invoice.saleChannelId,
-                                    PVC = invoice.PVC
+                                    PVC = invoice.PVC,
+                                    ParentProductCode = detail.ProductCode,
                                 };
                                 result.Add(invoiceModel2);
                             }
@@ -378,7 +379,7 @@ namespace InvoiceDownloader
                                Math.Round(item.TotalDiscount),
                                Math.Round(discountDetail),
                                Math.Round(comboDiscount),
-                               item.Unit == "TK" ? Math.Round(item.Surcharge) : Math.Round(item.TotalQuantity * item.BasePrice - discountDetail - comboDiscount),
+                               item.DTT,
                                _saleChannels.FirstOrDefault(s => s.Id == item.ChannelId)?.Name ?? string.Empty,
                                validDelivery.Contains(item.Delivery ?? "NO") ? item.DeliveryMan : string.Empty,
                                validDelivery.Contains(item.Delivery ?? "NO") ? item.Delivery : string.Empty,
@@ -438,6 +439,30 @@ namespace InvoiceDownloader
                         //"Thu khác"
                     };
             DataTable table = GenerateHeader(chatsLabel);
+
+
+            foreach(var item in invoices)
+            {
+                var discountDetail = item.Unit == "TP" ? item.DiscountDetails * item.ComboDiscountRaito : item.DiscountDetails;
+                var comboDiscount = item.Unit == "TP" ? item.ComboDiscount : 0;
+                item.DTT = item.Unit == "TK" ? Math.Round(item.Surcharge) : Math.Round(item.TotalQuantity * item.BasePrice - discountDetail - comboDiscount);
+            }
+
+
+            var invoiceCodes = invoices.Where(x => x.Unit != "TP" && x.Unit != "TK" && string.IsNullOrEmpty(x.ParentProductCode)).Select(x => new { x.InvoiceCode, x.ProductCode, x.DTT });
+            foreach (var item in invoiceCodes)
+            {
+                var groupInv = invoices.Where(x => x.InvoiceCode == item.InvoiceCode && (x.Unit == "TP") && x.ParentProductCode == item.ProductCode);
+                if (!groupInv.Any())
+                    continue;
+                if (item.InvoiceCode == "HD364329")
+                    Console.WriteLine("ec");
+                var x = groupInv.Sum(i => i.DTT); //7
+                if (x != item.DTT) // DTT  = 9
+                    groupInv.Last().DTT = groupInv.Last().DTT + (item.DTT - x);
+
+            }
+
             LoadDataToExcelFile(ref table, invoices!);
 
             var now = DateTime.Now.ToString("yyyyMMddHHmmss");
