@@ -10,7 +10,7 @@ namespace InvoiceDownloader
         public List<int> _branchKeys { get; set; } = new();
         public List<Product> _products { get; set; } = new();
         public List<CustomerDetail> _customers { get; set; } = new();
-        public List<CustomerDetail> _customersFull { get; set; } = new();
+        public Dictionary<string,string> _customersFull { get; set; } = new();
 
         public List<string> _helperProducts { get; set; } = new();
         public List<CommissionDTO> _commissions { get; set; } = new();
@@ -48,17 +48,21 @@ namespace InvoiceDownloader
                 logText1.Text = "Connected successfully to KiotViet server!";
                 errorText1.Text = "Loading branches...";
                 var branches = await _clientService.prepareValue(token);
-                _products = await _clientService.GetProductTree();
-                var cus = await _clientService.GetCustomer();
+                branches.ForEach(b => listView1.Items.Add(new ListViewItem(b.BranchName, b.Id)));
+                errorText1.Text = "Loading product & customer...";
+                var productTask = _clientService.GetProductTree();
+                var cusTask = _clientService.GetCustomer();
+                await Task.WhenAll(productTask, cusTask);
+                _products = productTask.Result;
+                var cus = cusTask.Result;
                 var customerGroup = cus.Where(c => c.Id == 3242 || c.Id == 3280).ToList();
                 customerGroup.ForEach(g => g.customerGroupDetails.ForEach(cd => cd.GroupName = g.Name));
                 cus.ForEach(g => g.customerGroupDetails.ForEach(cd => cd.GroupName = g.Name));
                 _customers = customerGroup.SelectMany(g => g.customerGroupDetails).ToList();
-                _customersFull = cus.SelectMany(g => g.customerGroupDetails).ToList();
+                _customersFull = cus.SelectMany(g => g.customerGroupDetails).DistinctBy(d => d.CustomerId).ToDictionary(d => d.CustomerId.ToString(), d => d.GroupName)!;
                 _helperProducts = (await _clientService.GetHelperProducts()).Select(p => p.Code).ToList()!;
                 _saleChannels = await _clientService.GetSaleChannel();
-                branches.ForEach(b => listView1.Items.Add(new ListViewItem(b.BranchName, b.Id)));
-                errorText1.Text = "Loaded branches successfully";
+                errorText1.Text = "App ready!!!!";
             }    
             else
                 logText1.Text = "Connected failure!";
@@ -94,35 +98,23 @@ namespace InvoiceDownloader
             {
                 var start = startTime.Value;
                 var end = endTime.Value;
+                errorText1.Text = "Loading invoices...";
+                Application.DoEvents();
                 var invoices = await _clientService.getInvoices(start, end, _branchKeys);
                 if(invoices.Count == 0)
                 {
                     errorText1.Text = $"Notice: There is have 0 invoice with this filter!";
                     return;
-                }    
-
+                }
+                errorText1.Text = "Map to invoice models...";
+                Application.DoEvents();
                 var invoicePrintModels = GetPrintModels(invoices);
+                errorText1.Text = "Calculating discount and commission...";
+                Application.DoEvents();
                 invoicePrintModels = UpdateDiscountDetails(invoicePrintModels);
-                invoicePrintModels.ForEach(i => 
-                {
-                    i.CustomerGroup = _customers.FirstOrDefault(c => c.CustomerId.ToString().Equals(i.CustomerId))?.GroupName ?? "Bán Lẻ";
-                    i.CustomerGroupFull = _customersFull.FirstOrDefault(c => c.CustomerId.ToString().Equals(i.CustomerId))?.GroupName ?? "Unknown";
-                });
-                if (_commissions.Count > 0)
-                    invoicePrintModels.ForEach(i =>
-                    {
-                        var cms = _commissions.FirstOrDefault(c => c.ProductCode == i.ProductCode);
-                        if(cms != null)
-                        {
-                            i.BanSiTVBH = cms.BanSiTVBH;
-                            i.BanLeTVBH = cms.BanLeTVBH;
-                            i.CSKHXemay = cms.CSKHXemay;
-                            i.CSKHXetai = cms.CSKHXetai;
-                            i.KhachSiXeNgoai = cms.KhachSiXeNgoai;
-                            i.KhachLeXeNgoai = cms.KhachLeXeNgoai;
-                        }    
-                    });
 
+                errorText1.Text = "Preparing to export...";
+                Application.DoEvents();
                 if (invoicePrintModels != null && invoicePrintModels.Any())
                     ExportExcel(invoicePrintModels);
                 errorText1.Text = $"Notice: Export invoices successfully!";
@@ -297,7 +289,21 @@ namespace InvoiceDownloader
                     var discountInvoice = invoiceGroup.Sum(x => x.TotalDiscount);
 
                     invoices[i].DiscountDetails = (invoices[i].TotalQuantity * invoices[i].BasePrice) * (discountProduct + discountInvoice) / totalVenue;
-                }    
+                }
+                invoices[i].CustomerGroup = _customers.FirstOrDefault(c => c.CustomerId.ToString().Equals(invoices[i].CustomerId))?.GroupName ?? "Bán Lẻ";
+                invoices[i].CustomerGroupFull = _customersFull.TryGetValue(invoices[i].CustomerId ?? string.Empty, out var val) ? val : "Unknown";
+                if (_commissions.Count > 0) {
+                    var cms = _commissions.FirstOrDefault(c => c.ProductCode == invoices[i].ProductCode);
+                    if (cms != null)
+                    {
+                        invoices[i].BanSiTVBH = cms.BanSiTVBH;
+                        invoices[i].BanLeTVBH = cms.BanLeTVBH;
+                        invoices[i].CSKHXemay = cms.CSKHXemay;
+                        invoices[i].CSKHXetai = cms.CSKHXetai;
+                        invoices[i].KhachSiXeNgoai = cms.KhachSiXeNgoai;
+                        invoices[i].KhachLeXeNgoai = cms.KhachLeXeNgoai;
+                    }
+                }
             }
             return invoices;
         }
@@ -473,7 +479,7 @@ namespace InvoiceDownloader
                 var column = wb.Worksheets.Worksheet(1).Column(4);
 
                 column.Style.Alignment.WrapText = true;
-                wb.Worksheets.Worksheet(1).Columns().AdjustToContents();
+                //wb.Worksheets.Worksheet(1).Columns().AdjustToContents();
 
                 SaveFileDialog saveFileDialog1 = new SaveFileDialog();
                 saveFileDialog1.Filter = "Excel|*.xlsx";

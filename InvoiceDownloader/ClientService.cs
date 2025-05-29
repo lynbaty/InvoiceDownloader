@@ -65,9 +65,9 @@ namespace InvoiceDownloader
 
             while (totalPage != null && result.Count < totalPage)
             {
-                var endpoint = $"https://public.kiotapi.com/invoices?" + $"fromPurchaseDate={start.ToString()}&toPurchaseDate={end.ToString()}&pageSize=100&includeInvoiceDelivery=true&currentItem={result.Count}";
+                var endpoint = $"https://public.kiotapi.com/invoices?" + $"fromPurchaseDate={start.ToString()}&toPurchaseDate={end.ToString()}&pageSize=200&includeInvoiceDelivery=true&currentItem={result.Count}";
                 if (branchKeys.Any())
-                    endpoint = $"https://public.kiotapi.com/invoices?" + $"fromPurchaseDate={start.ToString()}&toPurchaseDate={end.ToString()}&pageSize=100&includeInvoiceDelivery=true&currentItem={result.Count}&branchIds={string.Join(",",branchKeys)}";
+                    endpoint = $"https://public.kiotapi.com/invoices?" + $"fromPurchaseDate={start.ToString()}&toPurchaseDate={end.ToString()}&pageSize=200&includeInvoiceDelivery=true&currentItem={result.Count}&branchIds={string.Join(",",branchKeys)}";
 
                 var req = new HttpRequestMessage(HttpMethod.Get, endpoint);
                 var res = await _mainClient!.SendAsync(req);
@@ -108,22 +108,35 @@ namespace InvoiceDownloader
 
         public async Task<List<Product>> GetProductTree()
         {
-            int? totalPage = 2;
+            var endpoint = $"https://public.kiotapi.com/products?" + $"productType=1&includeMaterial=true&pageSize=1&currentItem=0";
+
+            var req = new HttpRequestMessage(HttpMethod.Get, endpoint);
+            var res = await _mainClient!.SendAsync(req);
+
+            var bodyContent = await res.Content.ReadAsStringAsync();
+            var invoiceResponse = JsonConvert.DeserializeObject<ProductResponse>(bodyContent);
+            int? totalItems = invoiceResponse.Total;
+
+            List<string> endPoints = new();
+
+            for (int i = 0; i <= invoiceResponse.Total / 200; i++)
+            {
+                endPoints.Add($"https://public.kiotapi.com/products?" + $"productType=1&includeMaterial=true&pageSize=200&currentItem={i * 200}");
+            }
+
+
             var result = new List<Product>();
 
-            while (totalPage != null && result.Count < totalPage)
+            await Parallel.ForEachAsync(endPoints, async (ep, cancellationToken) =>
             {
-                var endpoint = $"https://public.kiotapi.com/products?" + $"productType=1&includeMaterial=true&pageSize=100&currentItem={result.Count}";
-
-                var req = new HttpRequestMessage(HttpMethod.Get, endpoint);
+                var req = new HttpRequestMessage(HttpMethod.Get, ep);
                 var res = await _mainClient!.SendAsync(req);
 
                 var bodyContent = await res.Content.ReadAsStringAsync();
                 var invoiceResponse = JsonConvert.DeserializeObject<ProductResponse>(bodyContent);
-                totalPage = invoiceResponse?.Total;
                 if (invoiceResponse?.Data != null)
                     result.AddRange(invoiceResponse?.Data!);
-            }
+            });
 
             return result;
         }
