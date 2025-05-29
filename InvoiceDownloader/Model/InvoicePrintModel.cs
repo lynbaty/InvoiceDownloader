@@ -43,5 +43,6 @@ namespace InvoiceDownloader.Model
         public bool PVC { get; set; } = false;
         public decimal DTT { get; set; }
         public string? ParentProductCode { get; set; }
+        public bool IsParent { get; set; } = false;
     }
 }

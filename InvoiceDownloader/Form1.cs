@@ -15,6 +15,7 @@ namespace InvoiceDownloader
         public List<string> _helperProducts { get; set; } = new();
         public List<CommissionDTO> _commissions { get; set; } = new();
         public List<SaleChannel> _saleChannels { get; set; } = new();
+        public List<Invoice> _invoices { get; set; } = new();
 
 
         private readonly ClientService _clientService;
@@ -100,15 +101,15 @@ namespace InvoiceDownloader
                 var end = endTime.Value;
                 errorText1.Text = "Loading invoices...";
                 Application.DoEvents();
-                var invoices = await _clientService.getInvoices(start, end, _branchKeys);
-                if(invoices.Count == 0)
+                _invoices = await _clientService.getInvoices(start, end, _branchKeys);
+                if(_invoices.Count == 0)
                 {
                     errorText1.Text = $"Notice: There is have 0 invoice with this filter!";
                     return;
                 }
                 errorText1.Text = "Map to invoice models...";
                 Application.DoEvents();
-                var invoicePrintModels = GetPrintModels(invoices);
+                var invoicePrintModels = GetPrintModels(_invoices);
                 errorText1.Text = "Calculating discount and commission...";
                 Application.DoEvents();
                 invoicePrintModels = UpdateDiscountDetails(invoicePrintModels);
@@ -162,8 +163,9 @@ namespace InvoiceDownloader
                     {
                         invoiceModel.TotalDiscount = invoice.Discount ?? 0;
                     }    
+                    if(!productIds.Contains(detail.ProductId))
+                        result.Add(invoiceModel);
 
-                    result.Add(invoiceModel);
                     if(productIds.Contains(detail.ProductId))
                     {
                         var productFomular = _products.FirstOrDefault(p => p.Id == detail.ProductId)?.ProductFormulas;
@@ -171,6 +173,9 @@ namespace InvoiceDownloader
                         {
                             var comboSubtotal = detail.Price * detail.Quantity;
                             var tpSubtotal = productFomular.Sum(p => p.Quantity * detail.Quantity * p.Product?.BasePrice);
+                            invoiceModel.IsParent = true;
+                            result.Add(invoiceModel);
+
                             foreach (var product in productFomular)
                             {
                                 var comboDiscount = (tpSubtotal - comboSubtotal) * (detail.Quantity * product.Quantity * product.Product?.BasePrice) / tpSubtotal;
@@ -199,7 +204,11 @@ namespace InvoiceDownloader
                                 };
                                 result.Add(invoiceModel2);
                             }
-                        }    
+                        }
+                        else
+                        {
+                            result.Add(invoiceModel);
+                        }  
                     }
                 }    
 
@@ -455,20 +464,20 @@ namespace InvoiceDownloader
             }
 
 
-            var invoiceCodes = invoices.Where(x => x.Unit != "TP" && x.Unit != "TK" && string.IsNullOrEmpty(x.ParentProductCode)).Select(x => new { x.InvoiceCode, x.ProductCode, x.DTT });
+            var invoiceCodes = _invoices.Select(x => new {x.Code, DTT = x.InvoiceDetails.Sum(i => (i.Price - i.Discount) * i.Quantity) - (x.Discount ?? 0)});
+
             foreach (var item in invoiceCodes)
             {
-                var groupInv = invoices.Where(x => x.InvoiceCode == item.InvoiceCode && (x.Unit == "TP") && x.ParentProductCode == item.ProductCode);
+                var groupInv = invoices.Where(x => x.InvoiceCode == item.Code && !x.IsParent && x.Unit != "TK");
                 if (!groupInv.Any())
                     continue;
-                if (item.InvoiceCode == "HD364329")
-                    Console.WriteLine("ec");
+
                 var x = groupInv.Sum(i => i.DTT); //7
                 if (x != item.DTT) // DTT  = 9
                     groupInv.Last().DTT = groupInv.Last().DTT + (item.DTT - x);
 
             }
-
+            
             LoadDataToExcelFile(ref table, invoices!);
 
             var now = DateTime.Now.ToString("yyyyMMddHHmmss");
