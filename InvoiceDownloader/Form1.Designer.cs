@@ -238,7 +238,7 @@
             Controls.Add(txtSecretKey);
             Margin = new Padding(4, 5, 4, 5);
             Name = "Form1";
-            Text = "KiotViet Invoice Downloader v5.1";
+            Text = "KiotViet Invoice Downloader v5.6";
             Load += Form1_Load;
             ResumeLayout(false);
             PerformLayout();

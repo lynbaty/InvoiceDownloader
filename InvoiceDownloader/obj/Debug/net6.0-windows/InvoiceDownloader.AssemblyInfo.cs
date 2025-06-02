@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("InvoiceDownloader")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+00272ae2c7613a75a18e28338cb723559b9eb856")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+749ddea79cc09172f551d448f254b96eb155e2bd")]
 [assembly: System.Reflection.AssemblyProductAttribute("InvoiceDownloader")]
 [assembly: System.Reflection.AssemblyTitleAttribute("InvoiceDownloader")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

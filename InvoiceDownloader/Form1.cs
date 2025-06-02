@@ -56,11 +56,17 @@ namespace InvoiceDownloader
                 await Task.WhenAll(productTask, cusTask);
                 _products = productTask.Result;
                 var cus = cusTask.Result;
-                var customerGroup = cus.Where(c => c.Id == 3242 || c.Id == 3280).ToList();
-                customerGroup.ForEach(g => g.customerGroupDetails.ForEach(cd => cd.GroupName = g.Name));
                 cus.ForEach(g => g.customerGroupDetails.ForEach(cd => cd.GroupName = g.Name));
+                _customersFull = cus.SelectMany(g => g.customerGroupDetails).GroupBy(d => d.CustomerId).ToDictionary(g => g.Key.ToString(), g => string.Join(", ", g.Select(x => x.GroupName)))!;
+                var customerGroup = cus.Where(c => c.Id == 3242 || c.Id == 3280 || c.Id == 3245).ToList();
+                customerGroup.ForEach(g =>
+                {
+                    if (g.Id == 3245)
+                        g.Name = "Bán Sỉ";
+                    g.customerGroupDetails.ForEach(cd => cd.GroupName = g.Name);
+                });
+
                 _customers = customerGroup.SelectMany(g => g.customerGroupDetails).ToList();
-                _customersFull = cus.SelectMany(g => g.customerGroupDetails).DistinctBy(d => d.CustomerId).ToDictionary(d => d.CustomerId.ToString(), d => d.GroupName)!;
                 _helperProducts = (await _clientService.GetHelperProducts()).Select(p => p.Code).ToList()!;
                 _saleChannels = await _clientService.GetSaleChannel();
                 errorText1.Text = "App ready!!!!";
@@ -154,7 +160,7 @@ namespace InvoiceDownloader
                         CreatedDate = invoice.CreatedDate,
                         BranchName = invoice.BranchName,
                         Status = invoice.Status,
-                        Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode,
+                        Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode?.Trim(),
                         DeliveryMan = invoice.InvoiceDelivery.PartnerDelivery.Name,
                         ChannelId = invoice.saleChannelId,
                         PVC = invoice.PVC
@@ -196,7 +202,7 @@ namespace InvoiceDownloader
                                     Status = invoice.Status,
                                     ComboDiscount = comboDiscount ?? 0,
                                     ComboDiscountRaito = ((detail.Quantity * product.Quantity * product.Product?.BasePrice) / tpSubtotal) ?? 0,
-                                    Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode,
+                                    Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode?.Trim(),
                                     DeliveryMan = invoice.InvoiceDelivery.PartnerDelivery.Name,
                                     ChannelId = invoice.saleChannelId,
                                     PVC = invoice.PVC,
@@ -231,7 +237,7 @@ namespace InvoiceDownloader
                             Status = invoice.Status,
                             TotalQuantity = 1,
                             ProductCode = sur.SurchargeId.ToString(),
-                            Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode,
+                            Delivery = invoice.InvoiceDelivery.Status == 1 ? "NO" : invoice.InvoiceDelivery.DeliveryCode?.Trim(),
                             DeliveryMan = invoice.InvoiceDelivery.PartnerDelivery.Name,
                             ChannelId = invoice.saleChannelId,
                             PVC = invoice.PVC
@@ -299,8 +305,12 @@ namespace InvoiceDownloader
 
                     invoices[i].DiscountDetails = (invoices[i].TotalQuantity * invoices[i].BasePrice) * (discountProduct + discountInvoice) / totalVenue;
                 }
+    
+
                 invoices[i].CustomerGroup = _customers.FirstOrDefault(c => c.CustomerId.ToString().Equals(invoices[i].CustomerId))?.GroupName ?? "Bán Lẻ";
+                
                 invoices[i].CustomerGroupFull = _customersFull.TryGetValue(invoices[i].CustomerId ?? string.Empty, out var val) ? val : "Unknown";
+                
                 if (_commissions.Count > 0) {
                     var cms = _commissions.FirstOrDefault(c => c.ProductCode == invoices[i].ProductCode);
                     if (cms != null)
@@ -736,16 +746,10 @@ namespace InvoiceDownloader
 
             if(item.CustomerGroup == "Bán Sỉ" || item.ChannelId != 0)
             {
-                if (dt >= 400000)
-                    return item.TotalQuantity * item.BanSiTVBH;
-                else
-                    return item.TotalQuantity * 6000;
+                return item.TotalQuantity * item.BanSiTVBH;
             }else
             {
-                if (dt >= 400000)
-                    return item.TotalQuantity * item.BanLeTVBH;
-                else 
-                    return item.TotalQuantity * 12000;
+                return item.TotalQuantity * item.BanLeTVBH;
             }    
         }
         private decimal VCCommisionCount(InvoicePrintModel item)
@@ -758,28 +762,20 @@ namespace InvoiceDownloader
             switch (item.Delivery)
             {
                 case "XM":
-                    if (dt < 400_000)
-                        hhvc = item.TotalQuantity * 9_000;
-                    else
-                        hhvc = item.TotalQuantity * item.CSKHXemay;
+                    hhvc = item.TotalQuantity * item.CSKHXemay;
                     break;
                 case "XT":
-                    if (dt < 400_000)
-                        hhvc = item.TotalQuantity * 9_000;
-                    else
-                        hhvc = item.TotalQuantity * item.CSKHXetai;
+                    hhvc = item.TotalQuantity * item.CSKHXetai;
                     break;
                 case "XN":
-                    if (dt < 400_000)
-                        hhvc = item.TotalQuantity * 9_000;
-                    else
-                        hhvc = item.CustomerGroup == "Bán Sỉ" ? item.TotalQuantity * item.KhachSiXeNgoai : item.TotalQuantity * item.KhachLeXeNgoai;
+                    hhvc = item.CustomerGroup == "Bán Sỉ" ? item.TotalQuantity * item.KhachSiXeNgoai : item.TotalQuantity * item.KhachLeXeNgoai;
                     break;
                 default:
                     hhvc = 0;
                     break;
             }
-            return (item.CustomerGroup == "Bán Sỉ" && item.PVC) ? hhvc * 2 : hhvc;
+            //return (item.CustomerGroup == "Bán Sỉ" && item.PVC) ? hhvc * 2 : hhvc;
+            return hhvc;
         }
 
         private void txtSecretKey_TextChanged(object sender, EventArgs e)
